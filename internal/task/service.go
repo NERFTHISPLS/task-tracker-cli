@@ -15,9 +15,9 @@ const (
 )
 
 const (
-	StatusNew        = "todo"
-	StatusInProgress = "in-progress"
-	StatusDone       = "done"
+	statusNew        = "todo"
+	statusInProgress = "in-progress"
+	statusDone       = "done"
 )
 
 type Repository interface {
@@ -30,11 +30,11 @@ type Repository interface {
 }
 
 type TaskService struct {
-	repo Repository
+	Repo Repository
 }
 
 func (s *TaskService) Add(description string) error {
-	tasks, err := s.repo.List()
+	tasks, err := s.Repo.List()
 	if err != nil {
 		return e.Wrap(addTaskErr, err)
 	}
@@ -48,11 +48,11 @@ func (s *TaskService) Add(description string) error {
 		UpdatedAt:   time.Now(),
 	}
 
-	return s.repo.Add(task)
+	return s.Repo.Add(task)
 }
 
 func (s *TaskService) Update(id int, description, status string) error {
-	target, err := s.repo.ByID(id)
+	target, err := s.Repo.ByID(id)
 	if err != nil {
 		return e.Wrap(updateTaskErr, err)
 	}
@@ -69,15 +69,15 @@ func (s *TaskService) Update(id int, description, status string) error {
 	target.Status = status
 	target.UpdatedAt = time.Now()
 
-	return s.repo.Update(target)
+	return s.Repo.Update(target)
 }
 
 func (s *TaskService) Delete(id int) error {
-	return s.repo.Delete(id)
+	return s.Repo.Delete(id)
 }
 
 func (s *TaskService) List() ([]Task, error) {
-	return s.repo.List()
+	return s.Repo.List()
 }
 
 func (s *TaskService) ListByStatus(status string) ([]Task, error) {
@@ -85,7 +85,7 @@ func (s *TaskService) ListByStatus(status string) ([]Task, error) {
 		return nil, errors.New(taskStatusInvalidErr)
 	}
 
-	return s.repo.ListByStatus(status)
+	return s.Repo.ListByStatus(status)
 }
 
 func isEmptyString(str string) bool {
@@ -94,7 +94,7 @@ func isEmptyString(str string) bool {
 
 func isStatusValid(status string) bool {
 	switch status {
-	case StatusNew, StatusInProgress, StatusDone:
+	case statusNew, statusInProgress, statusDone:
 		return true
 	}
 
