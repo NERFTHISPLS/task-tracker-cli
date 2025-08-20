@@ -63,7 +63,7 @@ func (fs *FileStorage) Delete(id int) error {
 	for _, t := range tasks {
 		if t.ID == id {
 			found = true
-			break
+			continue
 		}
 
 		newTasks = append(newTasks, t)

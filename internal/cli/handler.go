@@ -24,6 +24,7 @@ func Run(service *task.TaskService) {
 
 		if err := service.Add(args[2]); err != nil {
 			fmt.Println("Error:", err)
+			return
 		}
 
 		fmt.Println("task added successfully")
@@ -41,6 +42,7 @@ func Run(service *task.TaskService) {
 
 		if err := service.Update(id, args[3], args[4]); err != nil {
 			fmt.Println("error:", err)
+			return
 		}
 
 		fmt.Println("task updated successfully")
@@ -58,6 +60,7 @@ func Run(service *task.TaskService) {
 
 		if err := service.Delete(id); err != nil {
 			fmt.Println("error:", err)
+			return
 		}
 
 		fmt.Println("task deleted successfully")
