@@ -67,6 +67,18 @@ func (s *TaskService) Delete(id int) error {
 	return s.repo.Delete(id)
 }
 
+func (s *TaskService) List() ([]Task, error) {
+	return s.repo.List()
+}
+
+func (s *TaskService) ListByStatus(status string) ([]Task, error) {
+	if !isStatusValid(status) {
+		return nil, errors.New(taskStatusInvalidErr)
+	}
+
+	return s.repo.ListByStatus(status)
+}
+
 func isEmptyString(str string) bool {
 	return str == ""
 }
