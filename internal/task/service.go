@@ -1,13 +1,23 @@
 package task
 
 import (
+	"errors"
 	"time"
 
 	"github.com/NERFTHISPLS/task-tracker-cli/internal/e"
 )
 
 const (
-	addTaskErr = "failed to add task"
+	addTaskErr              = "failed to add task"
+	updateTaskErr           = "failed to update task"
+	taskEmptyDescriptionErr = "description must not be empty"
+	taskStatusInvalidErr    = "status is invalid"
+)
+
+const (
+	StatusNew        = "todo"
+	StatusInProgress = "in-progress"
+	StatusDone       = "done"
 )
 
 type TaskService struct {
@@ -30,4 +40,38 @@ func (s *TaskService) Add(description string) error {
 	}
 
 	return s.repo.Add(task)
+}
+
+func (s *TaskService) Update(id int, description, status string) error {
+	target, err := s.repo.ByID(id)
+	if err != nil {
+		return e.Wrap(updateTaskErr, err)
+	}
+
+	if isEmptyString(description) {
+		return errors.New(taskEmptyDescriptionErr)
+	}
+
+	if !isStatusValid(status) {
+		return errors.New(taskStatusInvalidErr)
+	}
+
+	target.Description = description
+	target.Status = status
+	target.UpdatedAt = time.Now()
+
+	return s.repo.Update(target)
+}
+
+func isEmptyString(str string) bool {
+	return str == ""
+}
+
+func isStatusValid(status string) bool {
+	switch status {
+	case StatusNew, StatusInProgress, StatusDone:
+		return true
+	}
+
+	return false
 }

@@ -6,4 +6,5 @@ type Repository interface {
 	Delete(id int) error
 	List() ([]Task, error)
 	ListByStatus(status string) ([]Task, error)
+	ByID(id int) (Task, error)
 }
