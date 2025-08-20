@@ -63,6 +63,10 @@ func (s *TaskService) Update(id int, description, status string) error {
 	return s.repo.Update(target)
 }
 
+func (s *TaskService) Delete(id int) error {
+	return s.repo.Delete(id)
+}
+
 func isEmptyString(str string) bool {
 	return str == ""
 }
