@@ -15,9 +15,9 @@ const (
 )
 
 const (
-	statusNew        = "todo"
-	statusInProgress = "in-progress"
-	statusDone       = "done"
+	StatusNew        = "todo"
+	StatusInProgress = "in-progress"
+	StatusDone       = "done"
 )
 
 type Repository interface {
@@ -39,7 +39,18 @@ func (s *TaskService) Add(description string) error {
 		return e.Wrap(addTaskErr, err)
 	}
 
-	id := len(tasks) + 1
+	if isEmptyString(description) {
+		return errors.New(taskEmptyDescriptionErr)
+	}
+
+	id := 0
+
+	if len(tasks) == 0 {
+		id = 1
+	} else {
+		id = tasks[len(tasks)-1].ID + 1
+	}
+
 	task := Task{
 		ID:          id,
 		Description: description,
@@ -51,7 +62,7 @@ func (s *TaskService) Add(description string) error {
 	return s.Repo.Add(task)
 }
 
-func (s *TaskService) Update(id int, description, status string) error {
+func (s *TaskService) UpdateDescription(id int, description string) error {
 	target, err := s.Repo.ByID(id)
 	if err != nil {
 		return e.Wrap(updateTaskErr, err)
@@ -61,11 +72,22 @@ func (s *TaskService) Update(id int, description, status string) error {
 		return errors.New(taskEmptyDescriptionErr)
 	}
 
+	target.Description = description
+	target.UpdatedAt = time.Now()
+
+	return s.Repo.Update(target)
+}
+
+func (s *TaskService) UpdateStatus(id int, status string) error {
+	target, err := s.Repo.ByID(id)
+	if err != nil {
+		return e.Wrap(updateTaskErr, err)
+	}
+
 	if !isStatusValid(status) {
 		return errors.New(taskStatusInvalidErr)
 	}
 
-	target.Description = description
 	target.Status = status
 	target.UpdatedAt = time.Now()
 
@@ -94,7 +116,7 @@ func isEmptyString(str string) bool {
 
 func isStatusValid(status string) bool {
 	switch status {
-	case statusNew, statusInProgress, statusDone:
+	case StatusNew, StatusInProgress, StatusDone:
 		return true
 	}
 

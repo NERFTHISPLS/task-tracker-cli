@@ -22,6 +22,15 @@ type FileStorage struct {
 	Path string
 }
 
+func MustNew(path string) *FileStorage {
+	fs := &FileStorage{Path: path}
+	if _, err := fs.load(); err != nil {
+		panic(err.Error())
+	}
+
+	return fs
+}
+
 func (fs *FileStorage) Add(task task.Task) error {
 	tasks, err := fs.load()
 	if err != nil {
@@ -77,7 +86,16 @@ func (fs *FileStorage) Delete(id int) error {
 }
 
 func (fs *FileStorage) List() ([]task.Task, error) {
-	return fs.load()
+	tasks, err := fs.load()
+	if err != nil {
+		return nil, err
+	}
+
+	if len(tasks) == 0 {
+		return nil, errors.New(tasksEmptyErr)
+	}
+
+	return tasks, nil
 }
 
 func (fs *FileStorage) ListByStatus(status string) ([]task.Task, error) {

@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	repo := &storage.FileStorage{Path: "tasks.json"}
+	repo := storage.MustNew("tasks.json")
 	service := &task.TaskService{Repo: repo}
 	cli.Run(service)
 }
