@@ -27,7 +27,7 @@ func Run(service *task.TaskService) {
 	switch args[1] {
 	case addCmd:
 		if len(args) < 3 {
-			fmt.Println("usage: task-cli add <title> <description>")
+			fmt.Println("usage: task-cli add <description>")
 			return
 		}
 
