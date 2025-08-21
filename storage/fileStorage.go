@@ -22,6 +22,15 @@ type FileStorage struct {
 	Path string
 }
 
+func MustNew(path string) *FileStorage {
+	fs := &FileStorage{Path: path}
+	if _, err := fs.load(); err != nil {
+		panic(err.Error())
+	}
+
+	return fs
+}
+
 func (fs *FileStorage) Add(task task.Task) error {
 	tasks, err := fs.load()
 	if err != nil {
