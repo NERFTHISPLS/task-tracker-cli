@@ -39,6 +39,10 @@ func (s *TaskService) Add(description string) error {
 		return e.Wrap(addTaskErr, err)
 	}
 
+	if isEmptyString(description) {
+		return errors.New(taskEmptyDescriptionErr)
+	}
+
 	id := tasks[len(tasks)-1].ID + 1
 	task := Task{
 		ID:          id,
