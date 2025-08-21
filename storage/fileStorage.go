@@ -86,7 +86,16 @@ func (fs *FileStorage) Delete(id int) error {
 }
 
 func (fs *FileStorage) List() ([]task.Task, error) {
-	return fs.load()
+	tasks, err := fs.load()
+	if err != nil {
+		return nil, err
+	}
+
+	if len(tasks) == 0 {
+		return nil, errors.New(tasksEmptyErr)
+	}
+
+	return tasks, nil
 }
 
 func (fs *FileStorage) ListByStatus(status string) ([]task.Task, error) {
