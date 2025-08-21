@@ -51,7 +51,7 @@ func (s *TaskService) Add(description string) error {
 	return s.Repo.Add(task)
 }
 
-func (s *TaskService) Update(id int, description, status string) error {
+func (s *TaskService) UpdateDescription(id int, description string) error {
 	target, err := s.Repo.ByID(id)
 	if err != nil {
 		return e.Wrap(updateTaskErr, err)
@@ -61,11 +61,22 @@ func (s *TaskService) Update(id int, description, status string) error {
 		return errors.New(taskEmptyDescriptionErr)
 	}
 
+	target.Description = description
+	target.UpdatedAt = time.Now()
+
+	return s.Repo.Update(target)
+}
+
+func (s *TaskService) UpdateStatus(id int, status string) error {
+	target, err := s.Repo.ByID(id)
+	if err != nil {
+		return e.Wrap(updateTaskErr, err)
+	}
+
 	if !isStatusValid(status) {
 		return errors.New(taskStatusInvalidErr)
 	}
 
-	target.Description = description
 	target.Status = status
 	target.UpdatedAt = time.Now()
 

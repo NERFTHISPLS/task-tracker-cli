@@ -23,25 +23,25 @@ func Run(service *task.TaskService) {
 		}
 
 		if err := service.Add(args[2]); err != nil {
-			fmt.Println("Error:", err)
+			fmt.Println(err)
 			return
 		}
 
 		fmt.Println("task added successfully")
 	case "update":
-		if len(args) < 5 {
-			fmt.Println("usage: task-cli update <id> <description> <status>")
+		if len(args) < 4 {
+			fmt.Println("usage: task-cli update <id> <description>")
 			return
 		}
 
 		id, err := strconv.Atoi(args[2])
 		if err != nil {
-			fmt.Println("error: invalid id, provide integer id")
+			fmt.Println("invalid id, provide integer id")
 			return
 		}
 
-		if err := service.Update(id, args[3], args[4]); err != nil {
-			fmt.Println("error:", err)
+		if err := service.UpdateDescription(id, args[3]); err != nil {
+			fmt.Println(err)
 			return
 		}
 
@@ -54,19 +54,23 @@ func Run(service *task.TaskService) {
 
 		id, err := strconv.Atoi(args[2])
 		if err != nil {
-			fmt.Println("error: invalid id, provide integer id")
+			fmt.Println("invalid id, provide integer id")
 			return
 		}
 
 		if err := service.Delete(id); err != nil {
-			fmt.Println("error:", err)
+			fmt.Println(err)
 			return
 		}
 
 		fmt.Println("task deleted successfully")
 	case "list":
 		if len(args) < 3 {
-			tasks, _ := service.List()
+			tasks, err := service.List()
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
 
 			for _, t := range tasks {
 				fmt.Printf("%d: %s [%s]\n", t.ID, t.Description, t.Status)
@@ -74,7 +78,11 @@ func Run(service *task.TaskService) {
 
 			return
 		} else {
-			tasks, _ := service.ListByStatus(os.Args[2])
+			tasks, err := service.ListByStatus(os.Args[2])
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
 
 			for _, t := range tasks {
 				fmt.Printf("%d: %s [%s]\n", t.ID, t.Description, t.Status)
