@@ -15,9 +15,9 @@ const (
 )
 
 const (
-	statusNew        = "todo"
-	statusInProgress = "in-progress"
-	statusDone       = "done"
+	StatusNew        = "todo"
+	StatusInProgress = "in-progress"
+	StatusDone       = "done"
 )
 
 type Repository interface {
@@ -105,7 +105,7 @@ func isEmptyString(str string) bool {
 
 func isStatusValid(status string) bool {
 	switch status {
-	case statusNew, statusInProgress, statusDone:
+	case StatusNew, StatusInProgress, StatusDone:
 		return true
 	}
 

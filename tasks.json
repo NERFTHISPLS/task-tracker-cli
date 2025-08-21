@@ -7,17 +7,10 @@
     "updated_at": "2025-08-20T18:17:06.1109583+03:00"
   },
   {
-    "id": 3,
-    "description": "buy milk",
-    "status": "todo",
-    "created_at": "2025-08-20T18:17:12.1707014+03:00",
-    "updated_at": "2025-08-20T18:17:12.1707014+03:00"
-  },
-  {
     "id": 4,
     "description": "buy food",
-    "status": "todo",
+    "status": "done",
     "created_at": "2025-08-21T12:00:56.393976+03:00",
-    "updated_at": "2025-08-21T12:00:56.393976+03:00"
+    "updated_at": "2025-08-21T12:18:50.9987686+03:00"
   }
 ]
